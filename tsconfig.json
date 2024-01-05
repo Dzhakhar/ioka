@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["es2017", "dom"],
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "noEmit": false,
+    "isolatedModules": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "moduleResolution": "node",
+    "rootDirs": ["src"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "inlineSourceMap": true
+  },
+  "include": [
+    "*src/**/*.js",
+    "*src/**/*.ts",
+    "*src/**/*.tsx",
+    "*.d.ts",
+    ".eslintrc.js",
+    "jsonschema.js",
+  ],
+  "exclude": ["**/*node_modules", "**/*dist", "**/*__tests__", "**/*lib", "./dist/**/*"]
+}
