@@ -1,54 +1,53 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-import {AppSliceActions, AppState, OrderBook} from './types';
+import {AppSliceActions, AppState, Order, OrderStatus} from './types';
 
 export const appSlice = createSlice<AppState, AppSliceActions>({
   name: 'app',
   initialState: {
-    ws: undefined,
-    orderBooks: [],
-    currentSymbol: 'BTC',
-    throttleTime: 0,
+    currentOrderId: '',
+    isOrderCreateInProgress: false,
+    isPaymentCreateInProgress: false,
+
+    orderId: '',
+    order: undefined,
+    paymentResult: undefined,
   },
   reducers: {
     init(state: AppState) {
       return state;
     },
-    startWsConnection(state: AppState) {
-      return state;
-    },
-    wsConnectError(state: AppState) {
+    createOrder(state: AppState) {
       return {
         ...state,
-        wsError: 'Failed to connect to wss',
+        isOrderCreateInProgress: true,
       };
     },
-    setWsConnected(state: AppState, action: PayloadAction<WebSocket>) {
+    setOrderId(state: AppState, action: PayloadAction<string>) {
       return {
         ...state,
-        wsError: undefined,
-        ws: action.payload,
-      }
-    },
-    abortWsConnection(state: AppState) {
-      state.ws?.close();
-
-      return {
-        ...state,
-        ws: undefined,
-      }
-    },
-    addOrderBook(state: AppState, action: PayloadAction<OrderBook>) {
-      return {
-        ...state,
-        orderBooks: [action.payload, ...state.orderBooks].slice(0, 20),
+        orderId: action.payload,
+        isOrderCreateInProgress: false,
       };
     },
-    toggleThrottle(state: AppState) {
+    setOrder(state: AppState, action: PayloadAction<Order>) {
       return {
         ...state,
-        throttleTime: state.throttleTime === 0 ? 5000 : 0,
+        order: action.payload,
       }
+    },
+    createCardPayment(state: AppState) {
+      return {
+        ...state,
+        isPaymentCreateInProgress: true,
+      };
+    },
+    setPaymentResult(state: AppState, action: PayloadAction<OrderStatus>) {
+      return {
+        ...state,
+        isPaymentCreateInProgress: false,
+        paymentResult: action.payload,
+      };
     },
   },
 });

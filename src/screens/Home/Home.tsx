@@ -1,32 +1,58 @@
-import {FC} from "react";
-import {ActionCreator} from "redux";
-import {OrderBookTableContainer} from "../../components/OrderBookTable/OrderBookTable.container";
+import {FC, useCallback, useEffect} from "react";
+import {Box, Button, Card} from "@mui/material";
+import {ActionCreatorWithPayload} from "@reduxjs/toolkit";
+import {CreateOrderPayload} from "../../core/services/app/types";
+import {useNavigate} from "react-router-dom";
 
 export interface HomeProps {
-    connectWs: ActionCreator<void>;
-    abortWs: ActionCreator<void>;
-    toggleThrottle: ActionCreator<void>;
-
-    wsConnected: boolean;
-    throttleTime: number;
+    createOrder: ActionCreatorWithPayload<CreateOrderPayload>;
+    isOrderCreateInProgress: boolean;
+    orderId: string;
 }
 
-export const Home: FC<HomeProps> = ({connectWs, abortWs, toggleThrottle, wsConnected, throttleTime}) => {
+export const Home: FC<HomeProps> = ({
+                                        createOrder,
+                                        isOrderCreateInProgress,
+                                        orderId,
+                                    }) => {
+    const createOrderCb = useCallback(() => {
+        createOrder({
+            amount: 10200 * 100,
+            currency: 'KZT',
+            captureMethod: 'AUTO',
+        })
+    }, [createOrder]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (Boolean(orderId)) {
+            navigate('/payment');
+        }
+    }, [orderId]);
+
     return (
-        <div>
-            {wsConnected ? (
-                <button onClick={abortWs}>Abort WS</button>
-            ) : (
-                <button onClick={connectWs}>Connect to WS</button>
-            )}
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            fontSize: '1.3em',
+        }}>
+            <Box>
+                <Card sx={{
+                    padding: '20px',
+                    mb: '20px',
+                }}>
+                    Margarita Pizza, 3x, 10200 kzt
+                </Card>
+            </Box>
+            <Box>
 
-            {throttleTime === 0 ? (
-                <button onClick={toggleThrottle}>Throttle (5s)</button>
-            ) : (
-                <button onClick={toggleThrottle}>Real-Time</button>
-            )}
-
-            <OrderBookTableContainer/>
-        </div>
+            </Box>
+                <Button size={'large'}
+                        sx={{width: '100%'}}
+                        onClick={createOrderCb}
+                        disabled={isOrderCreateInProgress || Boolean(orderId)}
+                        variant={'contained'}>Order</Button>
+        </Box>
     );
 }

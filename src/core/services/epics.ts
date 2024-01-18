@@ -3,7 +3,7 @@ import { combineEpics, StateObservable } from 'redux-observable';
 import { Observable } from 'rxjs';
 
 import { RootState } from './store';
-import {onThrottleEpic, onWsConnectEpic, onWsDisconnectEpic, wsConnectEpic} from "./app/epics";
+import {onCardPaymentCreatedEpic, onOrderCreateEpic, onPaymentStartedEpic} from "./app/epics";
 
 type AppAction = {
   type: string;
@@ -11,10 +11,9 @@ type AppAction = {
 
 const rootEpic = (action$: Observable<Action<AppAction>>, state$: StateObservable<RootState>) =>
   combineEpics(
-      wsConnectEpic,
-      onWsConnectEpic,
-      onWsDisconnectEpic,
-      onThrottleEpic,
+      onOrderCreateEpic,
+      onPaymentStartedEpic,
+      onCardPaymentCreatedEpic,
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   )(action$ as any, state$, []);

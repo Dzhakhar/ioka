@@ -1,24 +1,18 @@
 import { connect } from 'react-redux';
 
 import {Home} from "./Home";
-import {appSlice} from "../../core/services/app/state";
-import {getThrottleTime, isWsConnected} from "../../core/services/app/selectors";
 import {RootState} from "../../core/services/store";
+import {appSlice} from "../../core/services/app/state";
 
-const mapStateToProps = (state: RootState) => {
-    const wsConnected = isWsConnected(state);
-    const throttleTime = getThrottleTime(state);
-
+const mapStateToProps = ({app}: RootState) => {
     return {
-        wsConnected,
-        throttleTime,
+        isOrderCreateInProgress: app.isOrderCreateInProgress,
+        orderId: app.orderId,
     };
 }
 
 const mapDispatchToProps = {
-    connectWs: appSlice.actions.startWsConnection,
-    abortWs: appSlice.actions.abortWsConnection,
-    toggleThrottle: appSlice.actions.toggleThrottle,
+    createOrder: appSlice.actions.createOrder,
 }
 
 export const HomeContainer = connect(mapStateToProps, mapDispatchToProps)(Home);
